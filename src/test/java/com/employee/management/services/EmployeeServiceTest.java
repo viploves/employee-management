@@ -83,18 +83,18 @@ class EmployeeServiceTest {
     @Test
     void testPrintEmployeesWithLongReportingLine_MoreThanMax() {
         List<Employee> employees = Arrays.asList(
-            new Employee("1", "CEO", "Boss", null, 200000),
-            new Employee("2", "VP", "One", "1", 150000),
-            new Employee("3", "Dir", "Two", "2", 120000),
-            new Employee("4", "Mgr", "Three", "3", 100000),
-            new Employee("5", "Lead", "Four", "4", 90000),
-            new Employee("6", "Dev", "Five", "5", 80000)
+            new Employee("1", "Tony", "Stark", null, 200000),
+            new Employee("2", "Nick", "Fury", "1", 150000),
+            new Employee("3", "Steve", "Rogers", "2", 120000),
+            new Employee("4", "Natasha", "Romanoff", "3", 100000),
+            new Employee("5", "Peter", "Parker", "4", 90000),
+            new Employee("6", "Mary", "Jane", "5", 80000)
         );
         
         employeeService.printEmployeesWithLongReportingLine(employees);
         
         String output = outputStream.toString();
-        assertTrue(output.contains("Dev Five"));
+        assertTrue(output.contains("Mary Jane"));
         assertTrue(output.contains("Level: 5"));
     }
     

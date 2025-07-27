@@ -19,7 +19,7 @@ public class EmployeeService {
     
     /**
      * Prints managers who earn more than 50% of the average salary of their direct reports
-     * OR managers who earn less than at least 20% of the average salary of their direct reports
+     * OR managers who earn less than 20% of the average salary of their direct reports
      *
      * @param employees List of Employee objects
      */
@@ -30,15 +30,15 @@ public class EmployeeService {
         }
 
         System.out.println("-------------------- Managers earning more or less --------------------");
-        Map<String, List<Employee>> managerToReports = employees.stream()
+        Map<String, List<Employee>> mgrReportsMap = employees.stream()
             .filter(e -> !StringUtils.isBlank(e.getManagerId()))
             .collect(Collectors.groupingBy(Employee::getManagerId));
         
         for (Employee manager : employees) {
-            List<Employee> directReports = managerToReports.get(manager.getId());
+            List<Employee> reports = mgrReportsMap.get(manager.getId());
             
-            if (directReports != null && !directReports.isEmpty()) {
-                double averageSalary = directReports.stream()
+            if (reports != null && !reports.isEmpty()) {
+                double averageSalary = reports.stream()
                     .mapToDouble(Employee::getSalary)
                     .average().orElse(0.0);
 
@@ -47,11 +47,11 @@ public class EmployeeService {
                 
                 if (highThreshold > 0 && manager.getSalary() > highThreshold) {
                     System.out.println(manager.getName() + "'s salary is higher than "
-                        + (manager.getSalary() - highThreshold) / highThreshold * 100 + "% of the higher threshold");
+                        + Math.round((manager.getSalary() - highThreshold) / highThreshold * 100) + "% of the higher threshold");
 
                 } else if (lowThreshold > 0 && manager.getSalary() < lowThreshold) {
                     System.out.println(manager.getName() + "'s salary is lower than "
-                        + (lowThreshold - manager.getSalary()) / lowThreshold * 100 + "% of the lower threshold");
+                        + Math.round((lowThreshold - manager.getSalary()) / lowThreshold * 100) + "% of the lower threshold");
                 } 
             }
         }
@@ -71,12 +71,12 @@ public class EmployeeService {
         }
         
         System.out.println("--------------- Employees having too long reporting line --------------");
-        Map<String, Employee> employeeMap = employees.stream()
+        Map<String, Employee> empMap = employees.stream()
             .collect(Collectors.toMap(Employee::getId, e -> e));
         Map<String, Integer> levelMap = new HashMap<>();
 
         for (Employee employee : employees) {
-            int level = getEmployeeReportingLevel(employee, employeeMap, levelMap);
+            int level = getEmployeeReportingLevel(employee, empMap, levelMap);
             
             if (level > configManager.getMaxReportingLevels()) {
                 System.out.println(employee.getName() + " | Level: " + level);
@@ -90,12 +90,12 @@ public class EmployeeService {
      * Recursively gets employee's reporting level
      *
      * @param employee The employee whose reporting level is to be found
-     * @param employeeMap Map for employee lookups
+     * @param empMap Map for employee lookups
      * @param levelMap Map for employee levels
      * @return The reporting level of the employee in the current recursion
      */
     private int getEmployeeReportingLevel(Employee employee, 
-                                                   Map<String, Employee> employeeMap,
+                                                   Map<String, Employee> empMap,
                                                    Map<String, Integer> levelMap) {
         if (levelMap.containsKey(employee.getId())) {
             return levelMap.get(employee.getId());
@@ -106,13 +106,13 @@ public class EmployeeService {
             return 0;
         }
         
-        Employee manager = employeeMap.get(employee.getManagerId());
+        Employee manager = empMap.get(employee.getManagerId());
         if (manager == null) {
             levelMap.put(employee.getId(), 0);
             return 0;
         }
         
-        int level = 1 + getEmployeeReportingLevel(manager, employeeMap, levelMap);
+        int level = 1 + getEmployeeReportingLevel(manager, empMap, levelMap);
         levelMap.put(employee.getId(), level);
         return level;
     }

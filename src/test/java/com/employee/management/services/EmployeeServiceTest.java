@@ -28,46 +28,47 @@ class EmployeeServiceTest {
     @Test
     void testPrintManagersEarningMoreOrLess_WithHighEarningManager() {
         List<Employee> employees = Arrays.asList(
-            new Employee("1", "John", "Doe", null, 100000),
-            new Employee("2", "Jane", "Smith", "1", 50000),
-            new Employee("3", "Bob", "Johnson", "1", 60000)
+            new Employee("1", "Peter", "Parker", null, 100000),
+            new Employee("2", "MJ", "Parker", "1", 50000),
+            new Employee("3", "Chris", "Evans", "1", 60000)
         );
         
         employeeService.printManagersEarningMoreOrLess(employees);
         
         String output = outputStream.toString();
-        assertTrue(output.contains("John Doe"));
-        assertTrue(output.contains("higher than the average"));
+        assertTrue(output.contains("Peter Parker"));
+        assertTrue(output.contains("higher than"));
     }
     
     @Test
     void testPrintManagersEarningMoreOrLess_WithLowEarningManager() {
         List<Employee> employees = Arrays.asList(
-            new Employee("1", "John", "Doe", null, 60000),
-            new Employee("2", "Jane", "Smith", "1", 80000),
-            new Employee("3", "Bob", "Johnson", "1", 90000)
+            new Employee("1", "Peter", "Parker", null, 60000),
+            new Employee("2", "MJ", "Parker", "1", 80000),
+            new Employee("3", "Chris", "Evans", "1", 90000)
         );
         
         employeeService.printManagersEarningMoreOrLess(employees);
         
         String output = outputStream.toString();
-        assertTrue(output.contains("John Doe"));
-        assertTrue(output.contains("lower than the average"));
+        assertTrue(output.contains("Peter Parker"));
+        assertTrue(output.contains("lower than"));
     }
 
     @Test
     void testPrintManagersEarningMoreOrLess_WithEarningWithinRange() {
         List<Employee> employees = Arrays.asList(
-            new Employee("1", "John", "Doe", null, 60000),
-            new Employee("2", "Jane", "Smith", "1", 80000),
-            new Employee("3", "Bob", "Johnson", "1", 90000)
+            new Employee("1", "Peter", "Parker", null, 80000),
+            new Employee("2", "MJ", "Parker", "1", 55000),
+            new Employee("3", "Chris", "Evans", "1", 75000)
         );
         
         employeeService.printManagersEarningMoreOrLess(employees);
         
         String output = outputStream.toString();
-        assertTrue(output.contains("John Doe"));
-        assertTrue(output.contains("lower than the average"));
+        assertFalse(output.contains("Peter Parker"));
+        assertFalse(output.contains("higher than"));
+        assertFalse(output.contains("lower than"));
     }
 
     @Test
@@ -80,7 +81,7 @@ class EmployeeServiceTest {
     }
     
     @Test
-    void testPrintEmployeesWithLongReportingLine_WithLongChain() {
+    void testPrintEmployeesWithLongReportingLine_MoreThanMax() {
         List<Employee> employees = Arrays.asList(
             new Employee("1", "CEO", "Boss", null, 200000),
             new Employee("2", "VP", "One", "1", 150000),
@@ -98,7 +99,7 @@ class EmployeeServiceTest {
     }
     
     @Test
-    void testPrintEmployeesWithLongReportingLine_WithShortChain() {
+    void testPrintEmployeesWithLongReportingLine_LessThanMax() {
         List<Employee> employees = Arrays.asList(
             new Employee("1", "CEO", "Boss", null, 200000),
             new Employee("2", "Dev", "One", "1", 80000)

@@ -8,9 +8,13 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 
 import com.employee.management.models.Employee;
+import com.employee.management.utils.ConfigManager;
 
 public class EmployeeService {
+    private final ConfigManager configManager;
+    
     public EmployeeService() {
+        this.configManager = new ConfigManager();
     }
     
     /**
@@ -18,10 +22,13 @@ public class EmployeeService {
      * OR managers who earn less than at least 20% of the average salary of their direct reports
      *
      * @param employees List of Employee objects
-     * @throws IllegalArgumentException if either input is null (though in this simple case,
-     *                                  integers cannot be null).
      */
     public void printManagersEarningMoreOrLess(List<Employee> employees) {
+        if(employees == null) {
+            System.out.println("-------------------- No employees provided in the sheet --------------------");
+            return;
+        }
+
         System.out.println("-------------------- Managers earning more or less --------------------");
         Map<String, List<Employee>> managerToReports = employees.stream()
             .filter(e -> !StringUtils.isBlank(e.getManagerId()))
@@ -34,13 +41,17 @@ public class EmployeeService {
                 double averageSalary = directReports.stream()
                     .mapToDouble(Employee::getSalary)
                     .average().orElse(0.0);
+
+                double highThreshold = averageSalary * (1 + (configManager.getSalaryHighThreshold() / 100));
+                double lowThreshold = averageSalary * (1 + (configManager.getSalaryLowThreshold() / 100));
                 
-                if (manager.getSalary() > (averageSalary * 1.5)) {
-                    System.out.println(manager.getName() + "'s salary is higher than the average salary by "
-                        + (manager.getSalary() - averageSalary) / averageSalary * 100 + "%");
-                } else if (manager.getSalary() < (averageSalary * 1.2)) {
-                    System.out.println(manager.getName() + "'s salary is lower than the average salary by "
-                        + (averageSalary - manager.getSalary()) / averageSalary * 100 + "%");
+                if (highThreshold > 0 && manager.getSalary() > highThreshold) {
+                    System.out.println(manager.getName() + "'s salary is higher than "
+                        + (manager.getSalary() - highThreshold) / highThreshold * 100 + "% of the higher threshold");
+
+                } else if (lowThreshold > 0 && manager.getSalary() < lowThreshold) {
+                    System.out.println(manager.getName() + "'s salary is lower than "
+                        + (lowThreshold - manager.getSalary()) / lowThreshold * 100 + "% of the lower threshold");
                 } 
             }
         }
@@ -54,6 +65,11 @@ public class EmployeeService {
      * @param employees List of Employee objects
      */
     public void printEmployeesWithLongReportingLine(List<Employee> employees) {
+        if(employees == null) {
+            System.out.println("-------------------- No employees provided in the sheet --------------------");
+            return;
+        }
+        
         System.out.println("--------------- Employees having too long reporting line --------------");
         Map<String, Employee> employeeMap = employees.stream()
             .collect(Collectors.toMap(Employee::getId, e -> e));
@@ -62,7 +78,7 @@ public class EmployeeService {
         for (Employee employee : employees) {
             int level = getEmployeeReportingLevel(employee, employeeMap, levelMap);
             
-            if (level > 4) {
+            if (level > configManager.getMaxReportingLevels()) {
                 System.out.println(employee.getName() + " | Level: " + level);
             }
         }

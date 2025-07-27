@@ -22,7 +22,7 @@ employee-management/
 │   │   │       ├── services/
 │   │   │       │   └── EmployeeService.java
 │   │   │       ├── utils/
-│   │   │       │   ├── ExcelReader.java
+│   │   │       │   ├── ExcelManager.java
 │   │   │       │   └── StringUtils.java
 │   │   │       └── Main.java
 │   │   └── resources/
@@ -44,9 +44,8 @@ The Excel file should have the following columns in the first sheet:
 - Column A: Employee ID
 - Column B: First Name
 - Column C: Last Name
-- Column D: Department
-- Column E: Salary
-- Column F: Manager ID
+- Column D: Salary
+- Column E: Manager ID
 
 The first row should contain headers and will be skipped during processing.
 

@@ -32,7 +32,7 @@ public class ExcelManager {
         InputStream inputStream = null;
         
         if (filePath.startsWith("/")) {
-            // Classpath resource with leading slash
+            // Classpath resource
             inputStream = getClass().getResourceAsStream(filePath);
         } else if (filePath.contains(":") || filePath.contains("\\")) {
             // Absolute file path
@@ -56,7 +56,7 @@ public class ExcelManager {
                     employee.setId(getCellValue(row.getCell(0)));
                     employee.setFirstName(getCellValue(row.getCell(1)));
                     employee.setLastName(getCellValue(row.getCell(2)));
-                    employee.setSalary(getNumericValue(row.getCell(3)));
+                    employee.setSalary(getDoubleCellValue(row.getCell(3)));
                     employee.setManagerId(getCellValue(row.getCell(4)));
                     employees.add(employee);
                 }
@@ -67,14 +67,21 @@ public class ExcelManager {
     }
     
     private String getCellValue(Cell cell) {
-        if (cell == null) return "";
+        if(cell == null) {
+            return "";
+        }
+
         return cell.getCellType() == CellType.STRING ? 
                cell.getStringCellValue() : 
                String.valueOf((long) cell.getNumericCellValue());
     }
-    
-    private double getNumericValue(Cell cell) {
-        return cell != null && cell.getCellType() == CellType.NUMERIC ? 
-               cell.getNumericCellValue() : 0.0;
+
+    private double getDoubleCellValue(Cell cell) {
+        // Return numeric value if provided or throw exception
+        if(cell != null && cell.getCellType() == CellType.NUMERIC) {
+            return cell.getNumericCellValue();
+        }
+        
+        throw new NumberFormatException("Cannot convert string to numeric for Row No. " + cell.getRowIndex());
     }
 }

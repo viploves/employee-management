@@ -1,11 +1,15 @@
 # Employee Management System
 
-A Java application that reads employee data from Excel files and displays it on the console.
+A Java application that reads employee and hierarchy data from an Excel file and displays the following:
+
+- Which managers earn less than they should, and by how much
+- Which managers earn more than they should, and by how much
+- Which employees have a reporting line which is too long, and by how much
 
 ## Features
 
-- Read employee data from Excel (.xlsx) files
-- Display employee information in a formatted console output
+- Read employee data from Excel (.xlsx) file
+- Display manager and hierarchy information in a formatted console output
 - Maven-based project structure
 - JUnit 5 test coverage
 
@@ -22,18 +26,24 @@ employee-management/
 │   │   │       ├── services/
 │   │   │       │   └── EmployeeService.java
 │   │   │       ├── utils/
-│   │   │       │   ├── ExcelManager.java
-│   │   │       │   └── StringUtils.java
+│   │   │       │   ├── ConfigManager.java
+│   │   │       │   └── ExcelManager.java
 │   │   │       └── Main.java
 │   │   └── resources/
+│   |       └── config.properties
+│   |       └── Employee Data.xlsx
 │   └── test/
 │       ├── java/
 │       │   └── com/employee/management/
 │       │       ├── models/
 │       │       │   └── EmployeeTest.java
+│       │       ├── services/
+│       │       │   └── EmployeeServiceTest.java
 │       │       └── utils/
-│       │           └── UtilsTest.java
+│       │           └── ExcelManagerTest.java
 │       └── resources/
+│   |       └── empty-test-file.xlsx
+│   |       └── test-employees.xlsx
 ├── pom.xml
 └── README.md
 ```
@@ -41,11 +51,11 @@ employee-management/
 ## Excel File Format
 
 The Excel file should have the following columns in the first sheet:
-- Column A: Employee ID
-- Column B: First Name
-- Column C: Last Name
-- Column D: Salary
-- Column E: Manager ID
+- Column A: Id
+- Column B: firstName
+- Column C: lastName
+- Column D: salary
+- Column E: managerId
 
 The first row should contain headers and will be skipped during processing.
 

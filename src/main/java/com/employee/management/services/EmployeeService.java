@@ -29,7 +29,10 @@ public class EmployeeService {
             return;
         }
 
+        System.out.println("-----------------------------------------------------------------------");
         System.out.println("-------------------- Managers earning more or less --------------------");
+        System.out.println("-----------------------------------------------------------------------");
+
         Map<String, List<Employee>> mgrReportsMap = employees.stream()
             .filter(e -> !StringUtils.isBlank(e.getManagerId()))
             .collect(Collectors.groupingBy(Employee::getManagerId));
@@ -46,11 +49,11 @@ public class EmployeeService {
                 double lowThreshold = averageSalary * (1 + (configManager.getSalaryLowThreshold() / 100));
                 
                 if (highThreshold > 0 && manager.getSalary() > highThreshold) {
-                    System.out.println(manager.getName() + "'s salary is higher than "
+                    System.out.println(manager.getName() + "'s salary > "
                         + Math.round((manager.getSalary() - highThreshold) / highThreshold * 100) + "% of the higher threshold");
 
                 } else if (lowThreshold > 0 && manager.getSalary() < lowThreshold) {
-                    System.out.println(manager.getName() + "'s salary is lower than "
+                    System.out.println(manager.getName() + "'s salary < "
                         + Math.round((lowThreshold - manager.getSalary()) / lowThreshold * 100) + "% of the lower threshold");
                 } 
             }
@@ -71,6 +74,8 @@ public class EmployeeService {
         }
         
         System.out.println("--------------- Employees having too long reporting line --------------");
+        System.out.println("-----------------------------------------------------------------------");
+
         Map<String, Employee> empMap = employees.stream()
             .collect(Collectors.toMap(Employee::getId, e -> e));
         Map<String, Integer> levelMap = new HashMap<>();
@@ -81,7 +86,7 @@ public class EmployeeService {
             // If there are X number of managers "between" the employee and the seniormost manager, 
             // then the difference between their levels would be X + 1
             if (level > (configManager.getMaxReportingLevels() + 1)) {
-                System.out.println(employee.getName() + " | Level: " + level);
+                System.out.println(employee.getName() + " | " + (level - 1) + " levels between them and the CEO");
             }
         }
 

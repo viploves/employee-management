@@ -88,14 +88,15 @@ class EmployeeServiceTest {
             new Employee("3", "Steve", "Rogers", "2", 120000),
             new Employee("4", "Natasha", "Romanoff", "3", 100000),
             new Employee("5", "Peter", "Parker", "4", 90000),
-            new Employee("6", "Mary", "Jane", "5", 80000)
+            new Employee("6", "Mary", "Jane", "5", 80000),
+            new Employee("7", "Hank", "Wym", "6", 80000)
         );
         
         employeeService.printEmployeesWithLongReportingLine(employees);
         
         String output = outputStream.toString();
-        assertTrue(output.contains("Mary Jane"));
-        assertTrue(output.contains("Level: 5"));
+        assertTrue(output.contains("Hank Wym"));
+        assertTrue(output.contains("Level: 6"));
     }
     
     @Test

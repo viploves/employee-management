@@ -1,0 +1,15 @@
+﻿Id,firstName,lastName,salary,managerId
+123,Joe,Doe,60000,
+124,Martin,Chekov,45000,123
+125,Bob,Ronstad,47000,123
+300,Alice,Hasacat,50000,124
+305,Brad,Hardleaf,34000,300
+306,Peter,Parker,40000,300
+307,Mary,Jane,50000,306
+308,Tony,Stark,70000,300
+310,Steve,Rogers,40000,308
+311,Natasha,Romanoff,45000,310
+450,Nick,Fury,50000,300
+353,Stephen,Strange,35000,450
+367,Bruce,Banner,40000,450
+451,Hank,Pym,35000,311

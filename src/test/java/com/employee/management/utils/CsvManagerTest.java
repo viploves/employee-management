@@ -12,31 +12,31 @@ import org.junit.jupiter.api.Test;
 
 import com.employee.management.models.Employee;
 
-class ExcelManagerTest {
+class CsvManagerTest {
     
-    private ExcelManager excelManager;
+    private CsvManager csvManager;
     
     @BeforeEach
     void setUp() {
-        excelManager = new ExcelManager();
+        csvManager = new CsvManager();
     }
     
     @Test
     void testReadEmployees_WithValidClasspathResource() throws IOException {
-        String filePath = "/test-employees.xlsx";
+        String filePath = "/test-employees.csv";
         
         assertDoesNotThrow(() -> {
-            List<Employee> employees = excelManager.readEmployees(filePath);
+            List<Employee> employees = csvManager.readEmployees(filePath);
             assertNotNull(employees);
         });
     }
     
     @Test
     void testReadEmployees_WithNonExistentFile() {
-        String filePath = "/non-existent-file.xlsx";
+        String filePath = "/non-existent-file.csv";
         
         IOException exception = assertThrows(IOException.class, () -> {
-            excelManager.readEmployees(filePath);
+            csvManager.readEmployees(filePath);
         });
         
         assertTrue(exception.getMessage().contains("File not found"));
@@ -44,10 +44,10 @@ class ExcelManagerTest {
     
     @Test
     void testReadEmployees_HandlesEmptyFile() {
-        String emptyFilePath = "/empty-test-file.xlsx";
+        String emptyFilePath = "/empty-test-file.csv";
         
         assertDoesNotThrow(() -> {
-            List<Employee> employees = excelManager.readEmployees(emptyFilePath);
+            List<Employee> employees = csvManager.readEmployees(emptyFilePath);
         });
     }
 }

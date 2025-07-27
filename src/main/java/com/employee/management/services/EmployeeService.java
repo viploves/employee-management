@@ -78,7 +78,9 @@ public class EmployeeService {
         for (Employee employee : employees) {
             int level = getEmployeeReportingLevel(employee, empMap, levelMap);
             
-            if (level > configManager.getMaxReportingLevels()) {
+            // If there are X number of managers "between" the employee and the seniormost manager, 
+            // then the difference between their levels would be X + 1
+            if (level > (configManager.getMaxReportingLevels() + 1)) {
                 System.out.println(employee.getName() + " | Level: " + level);
             }
         }

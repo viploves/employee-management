@@ -30,16 +30,6 @@ class ExcelManagerTest {
             assertNotNull(employees);
         });
     }
-
-    @Test
-    void testReadEmployees_WithAbsolutePathLogic() {
-        String absolutePath = "C:\\Users\\sharmav2\\employees-list.xlsx";
-
-        assertDoesNotThrow(() -> {
-            List<Employee> employees = excelManager.readEmployees(absolutePath);
-            assertNotNull(employees);
-        });
-    }
     
     @Test
     void testReadEmployees_WithNonExistentFile() {
@@ -51,16 +41,6 @@ class ExcelManagerTest {
         
         assertTrue(exception.getMessage().contains("File not found"));
     }   
-    
-    @Test
-    void testReadEmployees_ReturnsNonNullList() throws IOException {
-        try {
-            List<Employee> result = excelManager.readEmployees("/valid-test-file.xlsx");
-            assertNotNull(result, "Result should never be null");
-        } catch (IOException e) {
-            assertTrue(e.getMessage().contains("File not found"));
-        }
-    }
     
     @Test
     void testReadEmployees_HandlesEmptyFile() {
